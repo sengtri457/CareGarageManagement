@@ -1,0 +1,70 @@
+<h3>Repair Order Wizard</h3>
+
+<!-- Step 1: Select Customer -->
+<div *ngIf="step === 1">
+    <h5>Step 1: Select Customer</h5>
+    <select class="form-select" [(ngModel)]="order.customerId" name="customerId" (change)="loadVehicles()">
+        <option value="" disabled selected>Select Customer</option>
+        <option *ngFor="let c of customers" [value]="c._id">{{c.firstName}} {{c.lastName}} ({{c.phone}})</option>
+    </select>
+    <button class="btn btn-primary mt-2" [disabled]="!order.customerId" (click)="nextStep()">Next</button>
+</div>
+
+<!-- Step 2: Select Vehicle -->
+<div *ngIf="step === 2">
+    <h5>Step 2: Select Vehicle</h5>
+    <select class="form-select" [(ngModel)]="order.vehicleId" name="vehicleId">
+        <option value="" disabled selected>Select Vehicle</option>
+        <option *ngFor="let v of vehicles" [value]="v._id">{{v.plate}} - {{v.make}} {{v.model}}</option>
+    </select>
+    <div class="mt-2">
+        <button class="btn btn-secondary me-2" (click)="prevStep()">Back</button>
+        <button class="btn btn-primary" [disabled]="!order.vehicleId" (click)="nextStep()">Next</button>
+    </div>
+</div>
+
+<!-- Step 3: Select Services & Parts -->
+<div *ngIf="step === 3">
+    <h5>Step 3: Select Services & Parts</h5>
+
+    <!-- Services -->
+    <h6>Services</h6>
+    <div *ngFor="let s of services" class="form-check">
+        <input class="form-check-input" type="checkbox" [value]="s._id" [(ngModel)]="selectedServices"
+            name="service-{{s._id}}" />
+        <label class="form-check-label">{{s.name}} ({{s.basePrice | currency}})</label>
+    </div>
+
+    <!-- Parts -->
+    <h6 class="mt-2">Parts</h6>
+    <div *ngFor="let p of parts" class="d-flex align-items-center mb-1">
+        <input type="checkbox" class="form-check-input me-1" [(ngModel)]="selectedParts[p._id]" name="part-{{p._id}}" />
+        <span>{{p.name}} ({{p.unitPrice | currency}}) - Stock: {{p.minStock}}</span>
+        <input type="number" class="form-control ms-2" style="width:80px" [(ngModel)]="partQty[p._id]"
+            [disabled]="!selectedParts[p._id]" min="1" max="{{p.minStock}}" />
+    </div>
+
+    <!-- Machine & Mechanic Selection -->
+    <h6 class="mt-2">Machine</h6>
+    <select class="form-select" [(ngModel)]="order.machineUsed" name="machine">
+        <option value="" disabled selected>Select Machine</option>
+        <option *ngFor="let m of machines" [value]="m._id">{{m.name}} ({{m.brand}} - {{m.model}})</option>
+    </select>
+
+    <h6 class="mt-2">Mechanic</h6>
+    <select class="form-select" [(ngModel)]="order.mechanic" name="mechanic">
+        <option value="" disabled selected>Select Mechanic</option>
+        <option *ngFor="let mech of mechanics" [value]="mech._id">{{mech.firstName}}{{mech.lastNames}}</option>
+    </select>
+
+    <div class="mt-2">
+        <button class="btn btn-secondary me-2" (click)="prevStep()">Back</button>
+        <button class="btn btn-success" (click)="submitOrder()">Place Order</button>
+    </div>
+</div>
+
+<!-- Order Totals -->
+<div *ngIf="order.totalCost">
+    <h5 class="mt-3">Order Totals</h5>
+    <p>Total: {{order.totalCost | currency}}</p>
+</div>

@@ -1,0 +1,37 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th *ngFor="let col of columns">{{ col.label }}</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data" (click)="onRow(row)">
+            <td *ngFor="let c of columns">
+                {{ getNestedValue(row, c.key) }}
+            </td>
+            <td>
+                <button class="btn btn-sm btn-warning"
+                    (click)="editCustomer(row); $event.stopPropagation()">Update</button>
+                <button class="btn btn-sm btn-danger"
+                    (click)="delCustomer(row._id); $event.stopPropagation()">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Pagination Example -->
+<!-- <nav *ngIf="total > limit" aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item" [class.disabled]="page === 1">
+            <a class="page-link" (click)="onPage(page - 1)">Previous</a>
+        </li>
+        <li class="page-item" *ngFor="let p of [].constructor(Math.ceil(total / limit)); let i = index"
+            [class.active]="page === i + 1">
+            <a class="page-link" (click)="onPage(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page === Math.ceil(total / limit)">
+            <a class="page-link" (click)="onPage(page + 1)">Next</a>
+        </li>
+    </ul>
+</nav> -->

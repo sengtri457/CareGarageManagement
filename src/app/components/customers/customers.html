@@ -1,0 +1,57 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Customers</h4>
+    <div class="toolbar">
+        <input [(ngModel)]="q" (input)="onSearch()" placeholder="Search..." />
+    </div>
+    <form #f="ngForm" (ngSubmit)="createCustomer(f)" novalidate>
+        <!-- Name -->
+        <div class="mb-3">
+            <label for="firstName" class="form-label">fistName</label>
+            <input id="fistName" name="fistName" class="form-control" required [(ngModel)]="model.firstName"
+                #nameCtrl="ngModel" />
+            <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="text-danger small">
+                Name is required.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">lastName</label>
+            <input id="lastName" name="lastName" class="form-control" required [(ngModel)]="model.lastName"
+                #nameCtrl="ngModel" />
+            <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="text-danger small">
+                Name is required.
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input id="email" name="email" type="email" class="form-control" [(ngModel)]="model.email"
+                #emailCtrl="ngModel" />
+            <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger small">
+                Please enter a valid email.
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input id="phone" name="phone" class="form-control" [(ngModel)]="model.phone" />
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
+                {{ saving ? 'Saving...' : 'Create' }}
+            </button>
+            <button class="btn btn-secondary" type="button" (click)="resetForm(f)" [disabled]="saving">Reset</button>
+        </div>
+
+        <div *ngIf="successMsg" class="text-success mt-2">{{ successMsg }}</div>
+        <div *ngIf="errorMsg" class="text-danger mt-2">{{ errorMsg }}</div>
+    </form>
+</div>
+
+<app-datatable [columns]="columns" [data]="data" [page]="page" [limit]="limit" [total]="total"
+    (pageChange)="onPage($event)" (delCustomers)="onDelete($event)" (updateCustomer)="onEdit($event)">
+</app-datatable>

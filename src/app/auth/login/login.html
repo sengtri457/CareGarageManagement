@@ -1,0 +1,10 @@
+<div class="container mt-5" style="max-width:400px">
+    <h3 class="mb-3">Login</h3>
+    <form (submit)="login($event)">
+        <input class="form-control mb-2" placeholder="Username" [(ngModel)]="username" name="username" />
+        <input class="form-control mb-2" placeholder="Password" type="password" [(ngModel)]="password"
+            name="password" />
+        <button class="btn btn-primary w-100" type="submit">Login</button>
+    </form>
+    <div *ngIf="error" class="text-danger mt-2">{{error}}</div>
+</div>
