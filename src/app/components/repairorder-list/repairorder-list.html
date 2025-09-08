@@ -1,0 +1,52 @@
+<div *ngFor="let order of repair" class="repair-card">
+    <div class="header">
+        <h3>Repair Order: {{ order.number }}</h3>
+        <span class="status" [ngClass]="order.status">{{ order.status | uppercase }}</span>
+    </div>
+
+    <div class="section">
+        <h4>Customer Info</h4>
+        <p><strong>Name:</strong> {{ order.customerSnapshot?.name }}</p>
+        <p><strong>Phone:</strong> {{ order.customerSnapshot?.phone }}</p>
+        <p><strong>Email:</strong> {{ order.customerSnapshot?.email }}</p>
+    </div>
+
+    <div class="section">
+        <h4>Vehicle Info</h4>
+        <p><strong>Make & Model:</strong> {{ order.vehicleSnapshot?.make }} {{ order.vehicleSnapshot?.model }}</p>
+        <p><strong>Year:</strong> {{ order.vehicleSnapshot?.year }}</p>
+        <p><strong>VIN:</strong> {{ order.vehicleSnapshot?.vin }}</p>
+        <p><strong>Plate:</strong> {{ order.vehicleSnapshot?.plate }}</p>
+        <!-- <p><strong>Mileage:</strong> {{ order.vehicleSnapshot?.mileage }}</p> -->
+    </div>
+
+    <div class="section" *ngIf="order.servicesPerformed?.length">
+        <h4>Services Performed</h4>
+        <ul>
+            <li *ngFor="let service of order.servicesPerformed">
+                {{ service.serviceId?.name }} - ${{ service.price || service.serviceId?.basePrice }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="section" *ngIf="order.partsUsed?.length">
+        <h4>Parts Used</h4>
+        <ul>
+            <li *ngFor="let part of order.partsUsed">
+                {{ part.partId?.name }} (SKU: {{ part.partId?.sku }}) - ${{ part.pricePerUnit }} ×
+                {{ part.quantity || 1 }}
+            </li>
+        </ul>
+    </div>
+
+    <div class="section totals">
+        <p><strong>Total Cost:</strong> ${{ order.totalCost }}</p>
+        <p><strong>Notes:</strong> {{ order.notes || 'None' }}</p>
+        <p><strong>Date:</strong> {{ order.date | date:'medium' }}</p>
+    </div>
+    <div class="actions">
+        <button (click)="editOrder(order)" class="btn btn-edit">Update</button>
+        <button (click)="deleteOrder(order)" class="btn btn-delete">Delete</button>
+    </div>
+
+</div>
