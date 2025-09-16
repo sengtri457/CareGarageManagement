@@ -14,7 +14,8 @@ export class ServicesComponent {
   categories: any[] = [];
   categoriesMap: Record<string, string> = {};
   form: any = null;
-
+  q: string = ''; // search query
+  total = 0;
   constructor(private api: Apiservice) {}
 
   ngOnInit() {
@@ -22,24 +23,34 @@ export class ServicesComponent {
     this.loadCategories();
   }
 
-  loadServices() {
-    this.api.get('services').subscribe((res: any) => (this.services = res));
+  loadServices(search?: string) {
+    let query: any = {};
+    if (search) query.search = search;
+    this.api.get('services', query).subscribe((res: any) => {
+      this.services = res.data;
+      this.total = res.total ?? this.services.length;
+      console.log(this.services);
+    });
   }
 
   loadCategories() {
     this.api.get('categories').subscribe((res: any) => {
-      this.categories = res;
+      this.categories = res.data;
       this.categoriesMap = Object.fromEntries(
-        this.categories.map((c) => [c.id, c.name])
+        this.categories.map((c) => [c._id, c.name])
       );
     });
+  }
+  onSearch() {
+    this.loadServices(this.q);
   }
 
   openNew() {
     this.form = {
       name: '',
-      categoryId: this.categories[0]?.id || '',
-      price: 0,
+      categoryId: this.categories[0]?._id || '',
+      code: '',
+      basePrice: 0,
     };
   }
 
@@ -50,7 +61,7 @@ export class ServicesComponent {
   remove(service: any) {
     if (confirm('Delete service?')) {
       this.api
-        .delete(`services/${service.id}`)
+        .delete(`services/${service._id}`)
         .subscribe(() => this.loadServices());
     }
   }
@@ -62,12 +73,15 @@ export class ServicesComponent {
   save(event: any) {
     event.preventDefault();
     if (!this.form) return;
-    if (this.form.id) {
-      this.api.put(`services/${this.form.id}`, this.form).subscribe(() => {
+
+    if (this.form._id) {
+      // UPDATE
+      this.api.put(`services/${this.form._id}`, this.form).subscribe(() => {
         this.loadServices();
         this.form = null;
       });
     } else {
+      // CREATE
       this.api.post('services', this.form).subscribe(() => {
         this.loadServices();
         this.form = null;

@@ -1,52 +1,256 @@
-<div *ngFor="let order of repair" class="repair-card">
-    <div class="header">
-        <h3>Repair Order: {{ order.number }}</h3>
-        <span class="status" [ngClass]="order.status">{{ order.status | uppercase }}</span>
+@if (repair.length > 0) {
+@defer () {
+<div class="container-fluid p-4">
+    <div class="tools p-3 align-items-center">
+        <div class="wrapper-colors">
+            <div class="circle">
+                <span class="red box"></span>
+            </div>
+            <div class="circle">
+                <span class="yellow box"></span>
+            </div>
+            <div class="circle">
+                <span class="green box"></span>
+            </div>
+        </div>
+        <h5 class="text-white m-0 p-0">Orderlist</h5>
     </div>
-
-    <div class="section">
-        <h4>Customer Info</h4>
-        <p><strong>Name:</strong> {{ order.customerSnapshot?.name }}</p>
-        <p><strong>Phone:</strong> {{ order.customerSnapshot?.phone }}</p>
-        <p><strong>Email:</strong> {{ order.customerSnapshot?.email }}</p>
-    </div>
-
-    <div class="section">
-        <h4>Vehicle Info</h4>
-        <p><strong>Make & Model:</strong> {{ order.vehicleSnapshot?.make }} {{ order.vehicleSnapshot?.model }}</p>
-        <p><strong>Year:</strong> {{ order.vehicleSnapshot?.year }}</p>
-        <p><strong>VIN:</strong> {{ order.vehicleSnapshot?.vin }}</p>
-        <p><strong>Plate:</strong> {{ order.vehicleSnapshot?.plate }}</p>
-        <!-- <p><strong>Mileage:</strong> {{ order.vehicleSnapshot?.mileage }}</p> -->
-    </div>
-
-    <div class="section" *ngIf="order.servicesPerformed?.length">
-        <h4>Services Performed</h4>
-        <ul>
-            <li *ngFor="let service of order.servicesPerformed">
-                {{ service.serviceId?.name }} - ${{ service.price || service.serviceId?.basePrice }}
-            </li>
-        </ul>
-    </div>
-
-    <div class="section" *ngIf="order.partsUsed?.length">
-        <h4>Parts Used</h4>
-        <ul>
-            <li *ngFor="let part of order.partsUsed">
-                {{ part.partId?.name }} (SKU: {{ part.partId?.sku }}) - ${{ part.pricePerUnit }} ×
-                {{ part.quantity || 1 }}
-            </li>
-        </ul>
-    </div>
-
-    <div class="section totals">
-        <p><strong>Total Cost:</strong> ${{ order.totalCost }}</p>
-        <p><strong>Notes:</strong> {{ order.notes || 'None' }}</p>
-        <p><strong>Date:</strong> {{ order.date | date:'medium' }}</p>
-    </div>
-    <div class="actions">
-        <button (click)="editOrder(order)" class="btn btn-edit">Update</button>
-        <button (click)="deleteOrder(order)" class="btn btn-delete">Delete</button>
-    </div>
-
+    <table class="table table-hover custom-table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of repair">
+                <td><strong>{{ order.number }}</strong></td>
+                <td>{{ order.customerSnapshot?.name }}</td>
+                <td>{{ order.vehicleSnapshot?.make }} {{ order.vehicleSnapshot?.model }}</td>
+                <td>
+                    <span class="badge" [ngClass]="{
+                            'bg-success': order.status === 'open',
+                            'bg-warning text-dark': order.status === 'pending',
+                            'bg-danger': order.status === 'cancelled'
+                          }">
+                        {{ order.status | uppercase }}
+                    </span>
+                </td>
+                <td>{{ order.date | date:'mediumDate' }}</td>
+                <td class="text-end">
+                    <button (click)="viewCustomerOrders(order._id)" class="btn btn-sm btn-outline-primary me-1">
+                        <i class="bi bi-eye"></i> Detail
+                    </button>
+                    <button (click)="editOrder(order)" class="btn btn-sm btn-outline-warning me-1">
+                        <i class="bi bi-pencil"></i> Update
+                    </button>
+                    <button (click)="deleteOrder(order)" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+}@placeholder {
+<div class="container-fluid p-4">
+    <div class="tools p-3 align-items-center ">
+        <div class="wrapper-colors d-flex align-items-center">
+            <div class="circle">
+                <span class="red box pulse"></span>
+            </div>
+            <div class="circle">
+                <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+            </div>
+            <div class="circle">
+                <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+            </div>
+            <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+        </div>
+    </div>
+    <div class="skeleton-table">
+        <table class="table table-hover custom-table mb-0">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Skeleton Row 1 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Skeleton Row 2 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer" style="width: 100px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle" style="width: 160px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Skeleton Row 3 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer" style="width: 130px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle" style="width: 120px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Skeleton Row 4 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order" style="width: 70px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer" style="width: 110px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle" style="width: 150px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Skeleton Row 5 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order" style="width: 85px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer" style="width: 95px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle" style="width: 135px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Skeleton Row 6 -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="skeleton skeleton-order"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-customer" style="width: 105px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-vehicle" style="width: 145px;"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-badge"></div>
+                    </td>
+                    <td>
+                        <div class="skeleton skeleton-date"></div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex">
+                            <div class="skeleton skeleton-button detail"></div>
+                            <div class="skeleton skeleton-button update ms-1"></div>
+                            <div class="skeleton skeleton-button delete ms-1"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+}@else {
+<!-- Loading Spinner -->
+<div class="text-center p-4">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading data...</p>
+</div>
+}

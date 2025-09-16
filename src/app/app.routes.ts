@@ -7,6 +7,8 @@ import { authguardGuard } from './core/authguard-guard';
 import { Machines } from './components/machines/machines';
 import { Customers } from './components/customers/customers';
 import { RepairorderList } from './components/repairorder-list/repairorder-list';
+import { RepairOrderDetails } from './components/repair-order-details/repair-order-details';
+import { Parts } from './components/parts/parts';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -18,6 +20,11 @@ export const routes: Routes = [
     component: ServicesComponent,
   },
   {
+    path: 'parts',
+    component: Parts,
+  },
+
+  {
     path: 'repairorders',
     component: RepairOrders,
     //
@@ -26,10 +33,15 @@ export const routes: Routes = [
     path: 'repair-orders/edit/:id',
     component: RepairOrders, // Or your RepairOrderForm component
   },
+  { path: 'by-customer/:customerId', component: RepairorderList },
   {
     path: 'customers',
     component: Customers,
     //
+  },
+  {
+    path: 'repair-orders/:id',
+    component: RepairOrderDetails,
   },
   { path: '', redirectTo: 'repairorders', pathMatch: 'full' },
   { path: '**', redirectTo: 'repairorders' },

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, forkJoin, catchError, of, map } from 'rxjs';
 import { RepairorderList } from '../repairorder-list/repairorder-list';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 // Type definitions
 interface Customer {
@@ -255,11 +256,13 @@ export class RepairOrders implements OnInit, OnDestroy {
   constructor(private api: Apiservice, private route: ActivatedRoute) {
     console.log(this.getPartsTotal(), this.getServiceTotal());
   }
-
+  orders: any[] = [];
+  customerId: string = '';
   ngOnInit(): void {
     this.loadInitialData();
     this.getPartInv();
     this.getMachineLoard();
+
     console.log(this.selectedMachine);
     const orderId = this.route.snapshot.paramMap.get('id');
     if (orderId) {
@@ -281,6 +284,7 @@ export class RepairOrders implements OnInit, OnDestroy {
       });
     }
   }
+
   initializePartQty() {
     this.prtInvern.forEach((p) => {
       if (!this.partQty[p._id]) this.partQty[p._id] = 1;

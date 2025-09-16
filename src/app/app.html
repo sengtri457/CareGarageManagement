@@ -1,15 +1,28 @@
-<div class="app-header">
-  <div class="d-flex align-items-center">
-    <h5 class="me-3">CarGarage</h5>
-    <a routerLink="/customers" class="me-2">Customers</a>
-    <a routerLink="/vehicles" class="me-2">vehicles</a>
-    <a routerLink="/repair-orders/new">New Repair</a>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container">
+    <a class="navbar-brand" href="#">CarGarage</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/customers">Customer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/vehicles">Vehicle</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/services">Service</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/customers">Link</a>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div>
-    <button class="btn btn-outline-secondary btn-sm">Theme</button>
-  </div>
-</div>
-
+</nav>
 <div class="container-page">
   <router-outlet></router-outlet>
 </div>

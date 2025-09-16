@@ -1,57 +1,137 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Customers</h4>
     <div class="toolbar">
-        <input [(ngModel)]="q" (input)="onSearch()" placeholder="Search..." />
+        <p>Total: {{total}}</p>
+
+        <!-- <input  placeholder="Search..." /> -->
     </div>
-    <form #f="ngForm" (ngSubmit)="createCustomer(f)" novalidate>
-        <!-- Name -->
-        <div class="mb-3">
-            <label for="firstName" class="form-label">fistName</label>
-            <input id="fistName" name="fistName" class="form-control" required [(ngModel)]="model.firstName"
-                #nameCtrl="ngModel" />
-            <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="text-danger small">
-                Name is required.
+</div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <button type="button" class="button" (click)="openNew()">
+        <span class="button__text">New Customer</span>
+        <span class="button__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24"
+                stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" height="24"
+                fill="none" class="svg">
+                <line y2="19" y1="5" x2="12" x1="12"></line>
+                <line y2="12" y1="12" x2="19" x1="5"></line>
+            </svg></span>
+    </button>
+    <!-- <button class="btn btn-primary" (click)="openNew()">New Customer</button> -->
+    <div class="input-container">
+        <input type="text" [(ngModel)]="q" (input)="onSearch()" name="text" class="input" placeholder="search...">
+        <span class="icon">
+            <svg width="19px" height="19px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path opacity="1" d="M14 5H20" stroke="#000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    <path opacity="1" d="M14 8H17" stroke="#000" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                        stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path opacity="1" d="M22 22L20 20" stroke="#000" stroke-width="3.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                </g>
+            </svg>
+        </span>
+    </div>
+</div>
+@if (form) {
+<div class="container-fluid-1 mt-3">
+    <div class="tools p-3 align-items-center">
+        <div class="wrapper-colors">
+            <div class="circle">
+                <span class="red box"></span>
+            </div>
+            <div class="circle">
+                <span class="yellow box"></span>
+            </div>
+            <div class="circle">
+                <span class="green box"></span>
             </div>
         </div>
-        <div class="mb-3">
-            <label for="lastName" class="form-label">lastName</label>
-            <input id="lastName" name="lastName" class="form-control" required [(ngModel)]="model.lastName"
-                #nameCtrl="ngModel" />
-            <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="text-danger small">
-                Name is required.
+        <h5 class="text-white m-0 p-0">{{ form._id ? 'Edit' : 'New' }} Customer</h5>
+    </div>
+    <div class="card p-3 rounded-0 mb-4">
+        <form #f="ngForm" (ngSubmit)="save(f)" novalidate>
+            <!-- First Name -->
+            <div class="row g-2">
+
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">First Name</label>
+                    <input name="firstName" class="form-control" required [(ngModel)]="form.firstName"
+                        #firstNameCtrl="ngModel" />
+                    <div *ngIf="firstNameCtrl.invalid && (firstNameCtrl.dirty || firstNameCtrl.touched)"
+                        class="text-danger small">
+                        First name is required.
+                    </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">Last Name</label>
+                    <input name="lastName" class="form-control" required [(ngModel)]="form.lastName" />
+                </div>
+
+                <!-- Email -->
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">Email</label>
+                    <input name="email" type="email" class="form-control" [(ngModel)]="form.email" />
+                </div>
+
+                <!-- Phone -->
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">Phone</label>
+                    <input name="phone" class="form-control" [(ngModel)]="form.phone" />
+                </div>
+
+                <!-- Address -->
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">Street</label>
+                    <input name="street" class="form-control" [(ngModel)]="form.address.street" />
+                </div>
+                <div class="col-lg-4 col-6">
+                    <label class="form-label">City</label>
+                    <input name="city" class="form-control" [(ngModel)]="form.address.city" />
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
+                        {{ saving ? 'Saving...' : (form._id ? 'Update' : 'Create') }}
+                    </button>
+                    <button class="btn btn-secondary" type="button" (click)="cancel()"
+                        [disabled]="saving">Cancel</button>
+                </div>
             </div>
-        </div>
-
-        <!-- Email -->
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input id="email" name="email" type="email" class="form-control" [(ngModel)]="model.email"
-                #emailCtrl="ngModel" />
-            <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger small">
-                Please enter a valid email.
-            </div>
-        </div>
-
-        <!-- Phone -->
-        <div class="mb-3">
-            <label for="phone" class="form-label">Phone</label>
-            <input id="phone" name="phone" class="form-control" [(ngModel)]="model.phone" />
-        </div>
-
-
-        <!-- Buttons -->
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" type="submit" [disabled]="f.invalid || saving">
-                {{ saving ? 'Saving...' : 'Create' }}
-            </button>
-            <button class="btn btn-secondary" type="button" (click)="resetForm(f)" [disabled]="saving">Reset</button>
-        </div>
-
-        <div *ngIf="successMsg" class="text-success mt-2">{{ successMsg }}</div>
-        <div *ngIf="errorMsg" class="text-danger mt-2">{{ errorMsg }}</div>
-    </form>
+            <div *ngIf="successMsg" class="text-success mt-2">{{ successMsg }}</div>
+            <div *ngIf="errorMsg" class="text-danger mt-2">{{ errorMsg }}</div>
+        </form>
+    </div>
 </div>
 
-<app-datatable [columns]="columns" [data]="data" [page]="page" [limit]="limit" [total]="total"
-    (pageChange)="onPage($event)" (delCustomers)="onDelete($event)" (updateCustomer)="onEdit($event)">
-</app-datatable>
+}
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th *ngFor="let col of columns">{{ col.label }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data">
+            <td>{{ row.firstName }}</td>
+            <td>{{ row.lastName }}</td>
+            <td>{{ row.phone }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.address?.street }}</td>
+            <td>{{ row.address?.city }}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-warning me-1" (click)="onEdit(row)"><i
+                        class="bi bi-pencil"></i>Edit</button>
+                <button class="btn btn-sm btn-outline-danger" (click)="onDelete(row._id)"><i
+                        class="bi bi-trash"></i>Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

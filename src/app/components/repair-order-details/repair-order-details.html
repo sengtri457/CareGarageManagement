@@ -1,0 +1,200 @@
+<div *ngIf="order" class="container mt-4">
+    <!-- Header -->
+    <button routerLink="/repair-orders" class=" btn badge bg-info text-dark mb-4"><i class="bi bi-chevron-left"></i>
+        &nbsp;Back</button>
+    <div class="card shadow-sm mb-4">
+        <div class="card">
+            <div class="tools p-3 align-items-center ">
+                <div class="wrapper-colors d-flex align-items-center">
+                    <div class="circle">
+                        <span class="red box pulse"></span>
+                    </div>
+                    <div class="circle">
+                        <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                    </div>
+                    <div class="circle">
+                        <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                    </div>
+                    <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title text-primary">Repair Order: {{ order.number }}</h2>
+                <p class="mb-1"><strong>Status:</strong>
+                    <span class="badge bg-info text-dark">{{ order.status }}</span>
+                </p>
+                <p class="mb-1"><strong>Total Cost:</strong> {{ order.totalCost | currency }}</p>
+                <p class="mb-1"><strong>Date:</strong> {{ order.date | date:'medium' }}</p>
+                <p><strong>Notes:</strong> {{ order.notes || 'N/A' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Customer -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="tools p-3 align-items-center ">
+                    <div class="wrapper-colors d-flex align-items-center">
+                        <div class="circle">
+                            <span class="red box pulse"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                        </div>
+                        <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">Customer</h5>
+                    <p class="mb-1"><strong>Name:</strong> {{ order.customerSnapshot?.name }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ order.customerSnapshot?.phone }}</p>
+                    <p><strong>Email:</strong> {{ order.customerSnapshot?.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="tools p-3 align-items-center ">
+                    <div class="wrapper-colors d-flex align-items-center">
+                        <div class="circle">
+                            <span class="red box pulse"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                        </div>
+                        <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">Vehicle</h5>
+                    <p class="mb-1">
+                    <p class="mb-1"><strong>Year:</strong>{{ order.vehicleSnapshot?.year }}
+                    <p class="mb-1"><strong>Make:</strong>{{ order.vehicleSnapshot?.make }}
+                    <p class="mb-1"><strong>Models:</strong>{{ order.vehicleSnapshot?.model }}
+                    </p>
+                    <p class="mb-1"><strong>Plate:</strong> {{ order.vehicleSnapshot?.plate }}</p>
+                    <p><strong>VIN:</strong> {{ order.vehicleSnapshot?.vin }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Mechanic -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="tools p-3 align-items-center ">
+                    <div class="wrapper-colors d-flex align-items-center">
+                        <div class="circle">
+                            <span class="red box pulse"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                        </div>
+                        <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">Mechanic</h5>
+                    <p><strong>FirstName:
+                            {{ order.mechanicSnapshot?.firstName }}
+                        </strong>
+                    <p><strong>LastName:{{ order.mechanicSnapshot?.lastName }}
+                        </strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Machine -->
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="tools p-3 align-items-center ">
+                    <div class="wrapper-colors d-flex align-items-center">
+                        <div class="circle">
+                            <span class="red box pulse"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                        </div>
+                        <div class="circle">
+                            <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                        </div>
+                        <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">Machine Used</h5>
+                    <p class="mb-1"><strong>Name:</strong> {{ order.machineSnapshot?.name }}</p>
+                    <p class="mb-1"><strong>Type:</strong> {{ order.machineSnapshot?.type }}</p>
+                    <p><strong>Serial No:</strong> {{ order.machineSnapshot?.serialNo }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <div class="card shadow-sm mb-4">
+        <div class="tools p-3 align-items-center ">
+            <div class="wrapper-colors d-flex align-items-center">
+                <div class="circle">
+                    <span class="red box pulse"></span>
+                </div>
+                <div class="circle">
+                    <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                </div>
+                <div class="circle">
+                    <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                </div>
+                <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-secondary">Services Performed</h5>
+            <ul class="list-group">
+                <li *ngFor="let s of order.servicesPerformed" class="list-group-item d-flex justify-content-between">
+                    <span>{{ s.serviceId?.name || s.serviceId }}</span>
+                    <span class="text-success">{{ s.price | currency }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Parts -->
+    <div class="card shadow-sm">
+        <div class="tools p-3 align-items-center ">
+            <div class="wrapper-colors d-flex align-items-center">
+                <div class="circle">
+                    <span class="red box pulse"></span>
+                </div>
+                <div class="circle">
+                    <span class="yellow box pulse" style="animation-delay: 0.3s;"></span>
+                </div>
+                <div class="circle">
+                    <span class="green box pulse" style="animation-delay: 0.6s;"></span>
+                </div>
+                <div class="skeleton dark-skeleton skeleton-title ms-3"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title text-secondary">Parts Used</h5>
+            <ul class="list-group">
+                <li *ngFor="let p of order.partsUsed" class="list-group-item d-flex justify-content-between">
+                    <span>{{ p.partId?.name || p.partId }} (Qty: {{ p.quantity }})</span>
+                    <span class="text-danger">{{ p.pricePerUnit | currency }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

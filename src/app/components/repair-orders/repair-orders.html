@@ -1,5 +1,18 @@
 <!-- Repair Order Wizard -->
 <div class="container-fluid p-4">
+    <div class="tools">
+        <div class="wrapper-colors">
+            <div class="circle">
+                <span class="red box"></span>
+            </div>
+            <div class="circle">
+                <span class="yellow box"></span>
+            </div>
+            <div class="circle">
+                <span class="green box"></span>
+            </div>
+        </div>s
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="mb-0">Repair Order Wizard</h3>
@@ -53,6 +66,8 @@
                         Next <i class="bi bi-arrow-right"></i>
                     </button>
                 </div>
+
+
             </div>
 
             <!-- Step 2: Select Vehicle -->
@@ -256,7 +271,8 @@
                                 <div *ngFor="let part of selectedPartsList" class="mb-2">
                                     <div class="d-flex justify-content-between">
                                         <span>{{part.name}}</span>
-                                        <span>{{getPartQuantity(part._id)}} × {{formatCurrency(part.unitPrice)}}</span>
+                                        <span>{{getPartQuantity(part._id)}} ×
+                                            {{formatCurrency(part.unitPrice)}}</span>
                                     </div>
                                     <div class="text-muted small">{{part.sku}} - {{part.location}}</div>
                                 </div>
@@ -448,3 +464,6 @@
         </div>
     </div>
 </div>
+@if(step===1){
+<app-repairorder-list />
+}

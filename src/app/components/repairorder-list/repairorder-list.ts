@@ -3,6 +3,7 @@ import { Apiservice } from '../../core/apiservice';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RepairOrder } from '../../Models/repair-order';
 
 @Component({
   selector: 'app-repairorder-list',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class RepairorderList implements OnInit {
   repair: any[] = [];
+  router = inject(Router);
   repairs = inject(Apiservice);
   rout = inject(Router);
   ngOnInit(): void {
@@ -29,8 +31,12 @@ export class RepairorderList implements OnInit {
       },
     });
   }
-  // RepairOrders component
 
+  // RepairOrders component
+  viewCustomerOrders(customerId: string) {
+    this.router.navigate(['repair-orders/', customerId]);
+    console.log(customerId);
+  }
   // Edit / Update
 
   editOrder(order: any) {

@@ -8,7 +8,7 @@ import { FormsModule, NgForm } from '@angular/forms';
   selector: 'app-customers',
   imports: [Datatable, CommonModule, FormsModule],
   templateUrl: './customers.html',
-  styleUrls: ['./customers.css'], // fixed typo
+  styleUrls: ['./customers.css'],
 })
 export class Customers {
   saving = false;
@@ -19,6 +19,7 @@ export class Customers {
   limit = 10;
   total = 0;
   q = '';
+  form: any = null;
 
   columns = [
     { key: 'firstName', label: 'First Name' },
@@ -27,16 +28,8 @@ export class Customers {
     { key: 'email', label: 'Email' },
     { key: 'address.street', label: 'Street' },
     { key: 'address.city', label: 'City' },
+    { key: 'actions', label: 'Actions' }, // add column for buttons
   ];
-
-  model: any = {
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    address: { street: '', city: '', zip: '' },
-  };
-  editingCustomer: any = null;
 
   constructor(private api: Apiservice) {}
 
@@ -44,7 +37,6 @@ export class Customers {
     this.load();
   }
 
-  // helper to get nested values for datatable
   getNestedValue(obj: any, path: string) {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   }
@@ -71,38 +63,26 @@ export class Customers {
     this.load(this.q);
   }
 
-  createCustomer(form: NgForm) {
-    this.clearMessages();
-    if (form.invalid) {
-      this.errorMsg = 'Please fix form errors.';
-      return;
-    }
-
-    this.saving = true;
-    this.api.post('customers', this.model).subscribe({
-      next: (res: any) => {
-        this.saving = false;
-        this.successMsg = 'Customer created successfully.';
-        this.resetForm(form);
-        this.load(); // reload table
-      },
-      error: (err: any) => {
-        this.saving = false;
-        console.error('Create customer error', err);
-        this.errorMsg = err?.error?.message || 'Failed to create customer.';
-      },
-    });
-  }
-
-  resetForm(form: NgForm) {
-    form.resetForm();
-    this.model = {
+  openNew() {
+    this.form = {
       firstName: '',
       lastName: '',
       email: '',
       phone: '',
       address: { street: '', city: '', zip: '' },
     };
+  }
+
+  onEdit(row: any) {
+    // Fill form with selected customer’s data
+    this.form = {
+      ...row,
+      address: { ...row.address },
+    };
+  }
+
+  cancel() {
+    this.form = null;
   }
 
   clearMessages() {
@@ -118,10 +98,43 @@ export class Customers {
     });
   }
 
-  onEdit(row: any) {
-    const updated = { ...row }; // modify fields here as needed
-    this.api.put(`customers/${row._id}`, updated).subscribe((res) => {
-      this.data = this.data.map((c) => (c._id === row._id ? res : c));
-    });
+  save(f: NgForm) {
+    this.clearMessages();
+    if (f.invalid || !this.form) {
+      this.errorMsg = 'Please fix form errors.';
+      return;
+    }
+
+    this.saving = true;
+
+    if (this.form._id) {
+      // UPDATE
+      this.api.put(`customers/${this.form._id}`, this.form).subscribe({
+        next: (res: any) => {
+          this.saving = false;
+          this.successMsg = 'Customer updated successfully.';
+          this.data = this.data.map((c) => (c._id === res._id ? res : c));
+          this.cancel();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.errorMsg = err?.error?.message || 'Failed to update customer.';
+        },
+      });
+    } else {
+      // CREATE
+      this.api.post('customers', this.form).subscribe({
+        next: (res: any) => {
+          this.saving = false;
+          this.successMsg = 'Customer created successfully.';
+          this.load();
+          this.cancel();
+        },
+        error: (err) => {
+          this.saving = false;
+          this.errorMsg = err?.error?.message || 'Failed to create customer.';
+        },
+      });
+    }
   }
 }

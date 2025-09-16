@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
+import { RepairOrder } from '../Models/repair-order';
+import path from 'path';
 
 @Injectable({
   providedIn: 'root',
@@ -56,5 +58,8 @@ export class Apiservice {
     return this.http.delete<T>(`${this.base}/${path}`, {
       headers: this.getHeaders(),
     });
+  }
+  getByCustomer(customerId: string): Observable<any> {
+    return this.http.get(`${this.base}/repairs/${customerId}`);
   }
 }
