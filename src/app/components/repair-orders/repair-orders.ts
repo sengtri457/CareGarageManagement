@@ -60,6 +60,8 @@ interface MachineSnapshot {
   type: string;
   lastServiceAt?: string | Date;
   active: boolean;
+  brand: string;
+  VehicleId: string;
 }
 interface MechanicSnapshot {
   firstName: string;
@@ -109,8 +111,11 @@ interface ApiResponse<T> {
 }
 interface Machine {
   _id: string;
+  VehicleId: string;
   name: string;
   serialNo: string;
+  brand: string;
+  model: string;
   type: string;
   lastServiceAt: string; // or Date
   active: boolean;
@@ -182,6 +187,10 @@ export class RepairOrders implements OnInit, OnDestroy {
   get selectedPartsList(): Part[] {
     return this.prtInvern.filter((p: any) => this.selectedParts[p._id]);
   }
+  get filteredMachines(): Machine[] {
+    if (!this.order.vehicleId) return [];
+    return this.machines.filter((m) => m.VehicleId === this.order.vehicleId);
+  }
   isMachineSelected(machineId: string): boolean {
     return this.selectedMachineId === machineId;
   }
@@ -201,17 +210,22 @@ export class RepairOrders implements OnInit, OnDestroy {
     this.selectedMachineId = machineId;
     this.order.machineUsed = machineId;
 
-    const selected = this.machines.find((m) => m._id === machineId);
-    this.order.machineSnapshot = selected
+    const machine = this.filteredMachines.find((m) => m._id === machineId);
+    this.order.machineSnapshot = machine
       ? {
-          name: selected.name,
-          serialNo: selected.serialNo,
-          type: selected.type,
-          lastServiceAt: selected.lastServiceAt,
-          active: selected.active,
+          name: machine.name,
+          serialNo: machine.serialNo,
+          type: machine.type,
+          lastServiceAt: machine.lastServiceAt,
+          active: machine.active,
+          brand: machine.brand,
+          VehicleId: machine.VehicleId,
         }
       : undefined;
+
+    console.log(this.order.machineSnapshot);
   }
+
   onMechanicSelect(mechanicId: string): void {
     this.selectedMechanicId = mechanicId;
     this.order.mechanicId = mechanicId;
@@ -556,9 +570,11 @@ export class RepairOrders implements OnInit, OnDestroy {
     this.loading.submitting = true;
 
     // Get selected machine and mechanic objects
-    const selectedMachine = this.machines.find(
-      (m) => m._id === this.selectedMachineId
+    // Find selected machine only from filteredMachines
+    const machine = this.filteredMachines.find(
+      (m) => m._id === this.order.machineUsed // ✅ correct
     );
+
     const selectedMechanic = this.mechanics.find(
       (me) => me._id === this.selectedMechanicId
     );
@@ -574,14 +590,16 @@ export class RepairOrders implements OnInit, OnDestroy {
     // Prepare the order to submit
     const orderToSubmit: RepairOrder = {
       ...this.order,
-      machineUsed: selectedMachine?._id || null,
-      machineSnapshot: selectedMachine
+      machineUsed: machine?._id || null,
+      machineSnapshot: machine
         ? {
-            name: selectedMachine.name,
-            serialNo: selectedMachine.serialNo,
-            type: selectedMachine.type,
-            lastServiceAt: selectedMachine.lastServiceAt,
-            active: selectedMachine.active,
+            name: machine.name,
+            serialNo: machine.serialNo,
+            type: machine.type,
+            lastServiceAt: machine.lastServiceAt,
+            active: machine.active,
+            brand: machine.brand,
+            VehicleId: machine.VehicleId,
           }
         : undefined,
       mechanicId: selectedMechanic?._id || null, // ✅ fixed field name

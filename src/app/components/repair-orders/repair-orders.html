@@ -286,17 +286,17 @@
 
                         <!-- Additional Assignments -->
                         <div class="mt-3">
-                            <h6>Additional Assignments</h6>
-                            <div class="mb-2">
-                                <label class="form-label">Machine</label>
-                                <select class="form-select" [(ngModel)]="selectedMachineId"
-                                    (ngModelChange)="onMachineSelect($event)">
-                                    <option [ngValue]="null">-- Select Machine --</option>
-                                    <option *ngFor="let mach of machines" [ngValue]="mach._id">
-                                        {{ mach.name }} ({{ mach.serialNo }})
-                                    </option>
-                                </select>
+                            <label for="machineSelect" class="form-label">Machine *</label>
+                            <select id="machineSelect" class="form-select" [(ngModel)]="order.machineUsed"
+                                name="machineId" [disabled]="filteredMachines.length === 0">
+                                <option value="">Select Machine</option>
+                                <option *ngFor="let m of filteredMachines" [value]="m._id">
+                                    {{m.name}} - {{m.brand}} ({{m.model}})
+                                </option>
+                            </select>
 
+                            <div *ngIf="filteredMachines.length === 0" class="text-muted mt-2">
+                                No machines available for this vehicle.
                             </div>
 
                             <div class="mb-2">
@@ -399,7 +399,10 @@
                             </div>
                             <div class="card-body">
                                 <span>
-                                    {{selectedMachine?.name}}<br>
+                                    @for (ma of filteredMachines; track $index) {
+                                    {{ma.name}}{{ma.brand}}
+                                    }
+                                    <br>
                                 </span>
                             </div>
                         </div>
