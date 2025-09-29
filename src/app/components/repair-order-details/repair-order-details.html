@@ -50,9 +50,12 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-secondary">Customer</h5>
-                    <p class="mb-1"><strong>Name:</strong> {{ order.customerSnapshot?.name }}</p>
-                    <p class="mb-1"><strong>Phone:</strong> {{ order.customerSnapshot?.phone }}</p>
-                    <p><strong>Email:</strong> {{ order.customerSnapshot?.email }}</p>
+                    <p class="mb-1"><strong>Name:</strong>
+                        {{ order.customerId?.firstName }} {{order.customerId?.lastName}}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ order.customerId?.phone }}</p>
+                    <p><strong>Email:</strong> {{ order.customerId?.email }}</p>
+                    <p><strong>City:</strong> {{ order.customerId?.address.city }}</p>
+                    <p><strong>Street:</strong> {{ order.customerId?.address.street }}</p>
                 </div>
             </div>
         </div>
@@ -108,11 +111,11 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-secondary">Mechanic</h5>
-                    <p><strong>FirstName:
-                            {{ order.mechanicSnapshot?.firstName }}
-                        </strong>
-                    <p><strong>LastName:{{ order.mechanicSnapshot?.lastName }}
-                        </strong>
+                    <p class="mb-1"><strong>FirstName:</strong> {{ order.mechanicSnapshot?.firstName }}</p>
+                    <p class="mb-1"><strong>LastName:</strong> {{ order.mechanicSnapshot?.lastName }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ order.mechanicSnapshot?.phone }}</p>
+                    <p class="mb-1"><strong>experienceYears:</strong> {{ order.mechanicSnapshot?.experienceYears }}years
+                    </p>
                 </div>
             </div>
         </div>
@@ -136,8 +139,16 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-secondary">Machine Used</h5>
-                    <p class="mb-1"><strong>Id:</strong> {{ order.machineSnapshot?._id }}</p>
-                    <p class="mb-1"><strong>Name:</strong> {{ order.machineSnapshot?.name }}</p>
+                    <p class="mb-1"><strong>Id:</strong> {{ order.machineUsed?._id }}</p>
+                    <p class="mb-1"><strong>VehicleId:</strong> {{ order.machineUsed?.VehicleId }}</p>
+                    <p class="mb-1"><strong>Name:</strong> {{ order.machineUsed?.name }}</p>
+                    <p class="mb-1"><strong>Brand:</strong> {{ order.machineUsed?.brand }}</p>
+                    <p class="mb-1"><strong>Model:</strong> {{ order.machineUsed?.model }}</p>
+                    <p class="mb-1 text-success"><strong>Status:</strong> {{ order.machineUsed?.status }}</p>
+                    @for (m of order.machineUsed.maintenanceLog; track $index) {
+                    <p class="mb-1"><strong>PerformedBy:</strong> {{ m.performedBy }}</p>
+                    <p class="mb-1"><strong>Note:</strong> {{ m.notes }}</p>
+                    }
                 </div>
             </div>
         </div>
@@ -188,12 +199,16 @@
         </div>
         <div class="card-body">
             <h5 class="card-title text-secondary">Parts Used</h5>
+            @if (order.partsUsed.length >0) {
             <ul class="list-group">
                 <li *ngFor="let p of order.partsUsed" class="list-group-item d-flex justify-content-between">
                     <span>{{ p.partId?.name || p.partId }} (Qty: {{ p.quantity }})</span>
                     <span class="text-danger">{{ p.pricePerUnit | currency }}</span>
                 </li>
             </ul>
+            }@else {
+            <p class="text-danger">No part Available</p>
+            }
         </div>
     </div>
 </div>
